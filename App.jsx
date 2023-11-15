@@ -1,7 +1,6 @@
 import React from "react"
 import Sidebar from "./components/Sidebar"
 import Editor from "./components/Editor"
-import { data } from "./data"
 import Split from "react-split"
 import { nanoid } from "nanoid"
 
@@ -10,6 +9,7 @@ export default function App() {
     const [currentNoteId, setCurrentNoteId] = React.useState(
         (notes[0] && notes[0].id) || ""
     )
+    const currentNote = notes.find(note => note.id === currentNoteId) || notes[0]
     
     function createNewNote() {
         const newNote = {
@@ -30,12 +30,6 @@ export default function App() {
             let updatedElement = updatedArr.find(e => e.id == currentNoteId)
             return [updatedElement, ...updatedArr.filter(e2 => e2.id !== updatedElement.id)]
         })
-    }
-    
-    function findCurrentNote() {
-        return notes.find(note => {
-            return note.id === currentNoteId
-        }) || notes[0]
     }
     
     React.useEffect(() => {
@@ -59,7 +53,7 @@ export default function App() {
             >
                 <Sidebar
                     notes={notes}
-                    currentNote={findCurrentNote()}
+                    currentNote={currentNote}
                     setCurrentNoteId={setCurrentNoteId}
                     newNote={createNewNote}
                     trashIconClickEvent={deleteNote}
@@ -68,7 +62,7 @@ export default function App() {
                     currentNoteId && 
                     notes.length > 0 &&
                     <Editor 
-                        currentNote={findCurrentNote()} 
+                        currentNote={currentNote} 
                         updateNote={updateNote} 
                     />
                 }
@@ -88,3 +82,8 @@ export default function App() {
         </main>
     )
 }
+
+
+// Delete data.js file
+
+// currentNote() deleted and "currentNote variable" updated
