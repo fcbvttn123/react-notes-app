@@ -41,6 +41,11 @@ export default function App() {
     React.useEffect(() => {
         localStorage.setItem("notes", JSON.stringify(notes))
     }, [notes])
+
+    function deleteNote(e, noteId) {
+        e.stopPropagation()
+        setNotes(prev => prev.filter(e => e.id !== noteId))
+    }
     
     return (
         <main>
@@ -57,6 +62,7 @@ export default function App() {
                     currentNote={findCurrentNote()}
                     setCurrentNoteId={setCurrentNoteId}
                     newNote={createNewNote}
+                    trashIconClickEvent={deleteNote}
                 />
                 {
                     currentNoteId && 
