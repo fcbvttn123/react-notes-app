@@ -21,11 +21,15 @@ export default function App() {
     }
     
     function updateNote(text) {
-        setNotes(oldNotes => oldNotes.map(oldNote => {
-            return oldNote.id === currentNoteId
-                ? { ...oldNote, body: text }
-                : oldNote
-        }))
+        setNotes(oldNotes => {
+            let updatedArr = oldNotes.map(oldNote => {
+                return oldNote.id === currentNoteId
+                    ? { ...oldNote, body: text }
+                    : oldNote
+            })
+            let updatedElement = updatedArr.find(e => e.id == currentNoteId)
+            return [updatedElement, ...updatedArr.filter(e2 => e2.id !== updatedElement.id)]
+        })
     }
     
     function findCurrentNote() {
