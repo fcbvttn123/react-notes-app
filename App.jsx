@@ -82,8 +82,3 @@ export default function App() {
         </main>
     )
 }
-
-
-// Delete data.js file
-
-// currentNote() deleted and "currentNote variable" updated
