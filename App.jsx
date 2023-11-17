@@ -3,6 +3,8 @@ import Sidebar from "./components/Sidebar"
 import Editor from "./components/Editor"
 import Split from "react-split"
 import { nanoid } from "nanoid"
+import { onSnapshot } from "firebase/firestore"
+import { notesCollection } from "./firebase"
 
 export default function App() {
     const [notes, setNotes] = React.useState(JSON.parse(localStorage.getItem("notes")) || [])
@@ -33,8 +35,11 @@ export default function App() {
     }
     
     React.useEffect(() => {
-        localStorage.setItem("notes", JSON.stringify(notes))
-    }, [notes])
+        const unsubscribe = onSnapshot(notesCollection, snapShot => {
+
+        })
+        return unsubscribe
+    }, [])
 
     function deleteNote(e, noteId) {
         e.stopPropagation()
