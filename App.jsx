@@ -36,7 +36,13 @@ export default function App() {
     
     React.useEffect(() => {
         const unsubscribe = onSnapshot(notesCollection, snapShot => {
-
+            const notesArray = snapShot.docs.map(doc => {
+                return {
+                    ...doc.data(), 
+                    id: doc.id
+                }
+            })
+            setNotes(notesArray)
         })
         return unsubscribe
     }, [])
