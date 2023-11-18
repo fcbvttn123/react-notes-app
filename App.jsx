@@ -3,13 +3,13 @@ import Sidebar from "./components/Sidebar"
 import Editor from "./components/Editor"
 import Split from "react-split"
 import { nanoid } from "nanoid"
-import { onSnapshot, addDoc, doc, deleteDoc } from "firebase/firestore"
+import { onSnapshot, addDoc, doc, deleteDoc, setDoc } from "firebase/firestore"
 import { notesCollection, db } from "./firebase"
 
 export default function App() {
     const [notes, setNotes] = React.useState([]) 
-    const [currentNoteId, setCurrentNoteId] = React.useState(""
-    )
+    const [currentNoteId, setCurrentNoteId] = React.useState("")
+
     const currentNote = notes.find(note => note.id === currentNoteId) || notes[0]
     
     async function createNewNote() {
@@ -20,16 +20,9 @@ export default function App() {
         setCurrentNoteId(newNoteRef.id)
     }
     
-    function updateNote(text) {
-        setNotes(oldNotes => {
-            let updatedArr = oldNotes.map(oldNote => {
-                return oldNote.id === currentNoteId
-                    ? { ...oldNote, body: text }
-                    : oldNote
-            })
-            let updatedElement = updatedArr.find(e => e.id == currentNoteId)
-            return [updatedElement, ...updatedArr.filter(e2 => e2.id !== updatedElement.id)]
-        })
+    async function updateNote(text) {
+        const docRef = doc(db, "notes", currentNoteId)
+        await setDoc(docRef, {body: text}, {merge: true})
     }
     
     React.useEffect(() => {
