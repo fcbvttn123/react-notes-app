@@ -11,6 +11,9 @@ export default function App() {
     const [currentNoteId, setCurrentNoteId] = React.useState("")
 
     const currentNote = notes.find(note => note.id === currentNoteId) || notes[0]
+
+    // Tutorial: 
+        // const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt)
     
     async function createNewNote() {
         const newNote = {
@@ -35,7 +38,7 @@ export default function App() {
                     id: doc.id
                 }
             })
-            setNotes(notesArray)
+            setNotes(notesArray.sort((a, b) => b.updatedAt - a.updatedAt))
         })
         return unsubscribe
     }, [])
@@ -63,6 +66,7 @@ export default function App() {
             >
                 <Sidebar
                     notes={notes}
+                    // Tutorial: notes={sortedNotes}
                     currentNote={currentNote}
                     setCurrentNoteId={setCurrentNoteId}
                     newNote={createNewNote}
