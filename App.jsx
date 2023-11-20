@@ -9,6 +9,7 @@ import { notesCollection, db } from "./firebase"
 export default function App() {
     const [notes, setNotes] = React.useState([]) 
     const [currentNoteId, setCurrentNoteId] = React.useState("")
+    const [tempNoteText, setTempNoteText] = React.useState("")
 
     const currentNote = notes.find(note => note.id === currentNoteId) || notes[0]
 
@@ -49,6 +50,12 @@ export default function App() {
         }
     }, [notes])
 
+    React.useEffect(() => {
+        if(currentNote) {
+            setTempNoteText(currentNote.body)
+        }
+    }, [currentNote])
+
     async function deleteNote(noteId) {
         const docRef = doc(db, "notes", noteId)
         await deleteDoc(docRef)
@@ -74,8 +81,9 @@ export default function App() {
                 />
 
                 <Editor 
-                    currentNote={currentNote} 
+                    tempNoteText={tempNoteText} 
                     updateNote={updateNote} 
+                    setTempNoteText={setTempNoteText}
                 />
                 
             </Split>
