@@ -12,9 +12,6 @@ export default function App() {
     const [tempNoteText, setTempNoteText] = React.useState("")
 
     const currentNote = notes.find(note => note.id === currentNoteId) || notes[0]
-
-    // Tutorial: 
-        // const sortedNotes = notes.sort((a, b) => b.updatedAt - a.updatedAt)
     
     async function createNewNote() {
         const newNote = {
@@ -29,6 +26,11 @@ export default function App() {
     async function updateNote(text) {
         const docRef = doc(db, "notes", currentNoteId)
         await setDoc(docRef, {body: text, updatedAt: Date.now()}, {merge: true})
+    }
+
+    async function deleteNote(noteId) {
+        const docRef = doc(db, "notes", noteId)
+        await deleteDoc(docRef)
     }
     
     React.useEffect(() => {
@@ -56,10 +58,12 @@ export default function App() {
         }
     }, [currentNote])
 
-    async function deleteNote(noteId) {
-        const docRef = doc(db, "notes", noteId)
-        await deleteDoc(docRef)
-    }
+    React.useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            tempNoteText !== currentNote.body && updateNote(tempNoteText)
+        }, 500)
+        return () => clearTimeout(timeoutId)
+    }, [tempNoteText])
     
     return (
         <main>
@@ -73,7 +77,6 @@ export default function App() {
             >
                 <Sidebar
                     notes={notes}
-                    // Tutorial: notes={sortedNotes}
                     currentNote={currentNote}
                     setCurrentNoteId={setCurrentNoteId}
                     newNote={createNewNote}
@@ -82,7 +85,6 @@ export default function App() {
 
                 <Editor 
                     tempNoteText={tempNoteText} 
-                    updateNote={updateNote} 
                     setTempNoteText={setTempNoteText}
                 />
                 
